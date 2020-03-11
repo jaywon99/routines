@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:routines/widgets/about.dart';
 
 class SidemenuDrawer extends StatelessWidget {
   @override
@@ -26,20 +25,12 @@ class SidemenuDrawer extends StatelessWidget {
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile( // About menu
-            leading: Icon(Icons.info),
+            leading: Icon(Icons.info_outline),
             title: Text('About'),
-            onTap: () => {_navigateAbout(context)},
+            onTap: () => {Navigator.popAndPushNamed(context, '/about')},
           ),
         ],
       ),
-    );
-  }
-
-  _navigateAbout(BuildContext context) async {
-    Navigator.of(context).pop();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AboutPage()),
     );
   }
 }
