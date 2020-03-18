@@ -22,12 +22,12 @@ class SidemenuDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.home),
             title: Text('Home'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => Navigator.of(context).pop(),
           ),
           ListTile( // About menu
             leading: Icon(Icons.info_outline),
             title: Text('About'),
-            onTap: () => {Navigator.popAndPushNamed(context, '/about')},
+            onTap: () => Navigator.popAndPushNamed(context, '/about'),
           ),
         ],
       ),
