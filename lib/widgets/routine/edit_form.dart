@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:routines/models/routines.dart';
-import 'package:routines/widgets/common/colorpicker.dart';
+import 'package:routines/blocs/bloc_provider.dart';
+import 'package:routines/blocs/routine_bloc.dart';
+import 'package:routines/models/routine.dart';
+import 'package:routines/widgets/common/color_picker_raised_button.dart';
 
-class RoutineItemEditForm extends StatefulWidget {
-  RoutineItemEditForm({Key key, this.routine}) : super(key: key);
+class RoutineEditForm extends StatefulWidget {
+  RoutineEditForm({Key key, this.routine}) : super(key: key);
   final Routine routine;
 
   @override
-  _RoutineItemEditFormState createState() => _RoutineItemEditFormState();
+  _RoutineEditFormState createState() => _RoutineEditFormState();
 }
 
-class _RoutineItemEditFormState extends State<RoutineItemEditForm> {
+class _RoutineEditFormState extends State<RoutineEditForm> {
   final titleController =
       TextEditingController(); // https://flutter.dev/docs/cookbook/forms/retrieve-input
   final subtitleController = TextEditingController();
   final colorController = ColorPickingController();
   final _formKey = GlobalKey<FormState>();
+  get _isNew => widget.routine == null;
 
   @override
   void initState() {
@@ -36,7 +39,7 @@ class _RoutineItemEditFormState extends State<RoutineItemEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    final title = (widget.routine == null) ? "New Routine" : "Edit Routine";
+    final title = _isNew ? "New Routine" : "Edit Routine";
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -78,23 +81,36 @@ class _RoutineItemEditFormState extends State<RoutineItemEditForm> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ColorPickerRaisedButtonWidget(
-                  controller: colorController,
-                  child: Text('Pick Color'),
-                ),),
+                    controller: colorController,
+                    child: Text('Pick Color'),
+                  ),
+                ),
               ),
               Container(
                 alignment: Alignment.centerRight,
                 child: RaisedButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      Navigator.of(context).pop(
-                        Routine(
-                          id: widget.routine?.id ?? -1,
-                          title: titleController.text,
-                          subtitle: subtitleController.text,
-                          color: colorController.color,
-                        ),
+                      Routine routine = Routine(
+                        id: widget.routine?.id ?? -1,
+                        title: titleController.text,
+                        subtitle: subtitleController.text,
+                        color: colorController.color,
                       );
+
+                      final RoutineBloc bloc =
+                          BlocProvider.of<RoutineBloc>(context);
+                      bloc.update(routine);
+
+                      // TODO: open snackbar after closing window or return back??
+                      // String message = _isNew
+                      //     ? "${routine.title} Added."
+                      //     : "${routine.title} Updated.";
+                      // _scaffoldKey.currentState
+                      //   ..removeCurrentSnackBar()
+                      //   ..showSnackBar(SnackBar(content: Text(message)));
+
+                      Navigator.of(context).pop();
                     }
                   },
                   child: Text('Submit'),

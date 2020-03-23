@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+
+import 'package:routines/const.dart';
+
+import 'package:routines/blocs/bloc_provider.dart';
+import 'package:routines/blocs/routine_bloc.dart';
+
 import 'package:routines/widgets/home/page.dart';
 import 'package:routines/widgets/about/page.dart';
-import 'package:routines/widgets/routines/page.dart';
+import 'package:routines/widgets/routine/edit_form.dart';
+import 'package:routines/widgets/routine/list_page.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  return runApp(
+    BlocProvider<RoutineBloc>(
+      bloc: RoutineBloc(), // Add Bloc Here
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -15,13 +29,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        // When navigating to the "/second" route, build the AboutPage widget.
-        '/about': (context) => AboutPage(),
-        '/routines': (context) => RoutineList(),
+        Const.ROUTE_ABOUT_PAGE: (context) => AboutPage(),
+        Const.ROUTE_ROUTINE_LIST_PAGE: (context) => RoutineListPage(),
+        Const.ROUTE_ROUTINE_EDIT_FORM: (context) =>
+            RoutineEditForm(routine: ModalRoute.of(context).settings.arguments),
       },
-      // When navigating to the "/" route, it will launch home property
       home: HomePage(title: 'Routines!'),
     );
   }
 }
-

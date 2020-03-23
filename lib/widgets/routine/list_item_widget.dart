@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:routines/models/routines.dart';
 
-typedef  void CallbackRoutineItem(Routine routine);
+import 'package:routines/blocs/bloc_provider.dart';
+import 'package:routines/blocs/routine_bloc.dart';
+
+import 'package:routines/models/routine.dart';
+
+typedef void CallbackRoutineItem(Routine routine);
 
 // 1. Statefull or Stateless
 class RoutineListItem extends StatelessWidget {
   final Routine routine;
   final CallbackRoutineItem onEditAction; // Callback typedef를 바꾸는 게 좋을 듯..
-  final CallbackRoutineItem onDismissedAction;
 
   RoutineListItem(
-      {Key key, this.routine, this.onDismissedAction, this.onEditAction})
+      {Key key, this.routine, this.onEditAction})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final RoutineBloc bloc = BlocProvider.of<RoutineBloc>(context);
+
     return Dismissible(
       key: Key(routine.id.toString()),
       background: Container(
@@ -50,8 +55,12 @@ class RoutineListItem extends StatelessWidget {
         DismissDirection.startToEnd: 0.2,
         DismissDirection.endToStart: 0.2,
       },
-      onDismissed: (direction) =>
-          onDismissedAction(routine), // only one type dismissed support
+      onDismissed: (direction) {
+        Scaffold.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text("${routine.title} dismissed")));
+        bloc.remove(routine);
+      },
       child: ListTile(
         title: Text('${routine.title}'),
         subtitle: Text('${routine.subtitle}'),
@@ -59,7 +68,9 @@ class RoutineListItem extends StatelessWidget {
         //   width: 20.0,
         //   color: routine.color,
         // ),
-        leading: CircleAvatar(backgroundColor: routine.color,),
+        leading: CircleAvatar(
+          backgroundColor: routine.color,
+        ),
         onTap: () => onEditAction(routine),
       ),
     );

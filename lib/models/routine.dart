@@ -6,5 +6,5 @@ class Routine {
   String subtitle;
   Color color;
 
-  Routine({this.id, this.title, this.subtitle, this.color});  
+  Routine({this.id, this.title, this.subtitle, this.color});
 }
