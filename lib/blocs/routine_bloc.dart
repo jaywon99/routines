@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:routines/blocs/bloc_provider.dart';
 import 'package:routines/models/routine.dart';
 
-import 'package:routines/dao/memory/routines.dart';
+import 'package:routines/repositories/routines.dart';
 
 class RoutineBloc implements BlocBase {
   // Synchronous Stream to handle the provision of the movie genres
@@ -12,29 +12,28 @@ class RoutineBloc implements BlocBase {
   StreamController<List<Routine>> _routineController = StreamController<List<Routine>>.broadcast();
   Stream<List<Routine>> get routines => _routineController.stream;
 
-  // DAO Object = Find a way to inject this. // Constructor??
-  // interface or something similar
-  RoutinesMemoryDAO _routinesDao = new RoutinesMemoryDAO();
+  final RoutinesRepository routinesRepository;
+  RoutineBloc(this.routinesRepository) : super(); // TODO: RoutineBloc에 RoutinesSQLiteProvider를 Inject
 
   void dispose() {
     _routineController.close();
   }
 
   void update(Routine routine) {
-    _routinesDao.update(routine).then((_) => _notify());
+    routinesRepository.update(routine).then((_) => _notify());
   }
 
   void remove(Routine routine) async {
-    _routinesDao.remove(routine).then((_) => _notify());
+    routinesRepository.remove(routine).then((_) => _notify());
   }
 
   void getAll() async {
-    List<Routine> _routines = await _routinesDao.findAll();
+    List<Routine> _routines = await routinesRepository.findAll();
     _routineController.sink.add(UnmodifiableListView<Routine>(_routines));
   }
 
   void _notify() async {
-    List<Routine> _routines = await _routinesDao.findAll();
+    List<Routine> _routines = await routinesRepository.findAll();
     _routineController.sink.add(UnmodifiableListView<Routine>(_routines));
   }
 

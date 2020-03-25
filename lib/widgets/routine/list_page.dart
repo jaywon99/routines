@@ -15,6 +15,12 @@ class _RoutineListPageState extends State<RoutineListPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // DO SOMETHING like subscribe something (but why not stream builder??)
+  }
+
+  @override
   Widget build(BuildContext context) {
     final RoutineBloc bloc = BlocProvider.of<RoutineBloc>(context);
 

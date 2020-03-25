@@ -92,7 +92,7 @@ class _RoutineEditFormState extends State<RoutineEditForm> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       Routine routine = Routine(
-                        id: widget.routine?.id ?? -1,
+                        id: widget.routine?.id ?? null,
                         title: titleController.text,
                         subtitle: subtitleController.text,
                         color: colorController.color,

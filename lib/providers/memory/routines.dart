@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:routines/models/routine.dart';
+import 'package:routines/repositories/routines.dart';
 
-// interface style로 만들어야 하지 않을지..
-class RoutinesMemoryDAO {
+class RoutinesMemoryProvider extends RoutinesRepository {
   List<Routine> _routines;
   int _lastId = 0;
 
-  RoutinesMemoryDAO() {
+  RoutinesMemoryProvider() {
     _routines = List<Routine>();
     // PUT INITIAL DATA for testing
     this.update(Routine(
-        id: -1,
         title: 'Routine1',
         subtitle: 'Routine Subtitle Red',
         color: Colors.red));
     this.update(Routine(
-        id: -1,
         title: 'Routine2',
         subtitle: 'Routine Subtitle Green',
         color: Colors.green));
     this.update(Routine(
-        id: -1,
         title: 'Routine3',
         subtitle: 'Routine Subtitle Blue',
         color: Colors.blue));
@@ -40,7 +37,7 @@ class RoutinesMemoryDAO {
   // if not exist, add it, else update it.
   Future<int> update(Routine routine) async {
     // print("before ${routine.id} ${routine.title}");
-    if (routine.id == -1 || routine.id == null) {
+    if (routine.id == null) {
       // NEW data
       routine.id = (await _nextId());
     }
